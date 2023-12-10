@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <string>
 #include <queue>
+#include <chrono>
 
 // Define a structure for your nodes in the AVL tree
 struct AVLNode {
@@ -30,6 +31,9 @@ struct AVLNode {
 class AVLTree {
 private:
     AVLNode* root;
+    int operationCount;
+    std::chrono::steady_clock::time_point startTime;
+    std::chrono::steady_clock::time_point endTime;
 
     AVLNode* insert(AVLNode* node, const std::string& key, const std::string& name, 
     const std::string& dob, const std::string& tel, const std::string& email);
@@ -42,14 +46,24 @@ private:
     AVLNode* find(AVLNode* node, const std::string& key);
 
 public:
-    AVLTree() : root(NULL) {}
+    AVLTree() : root(NULL), operationCount(0) {}
 	void printTree() const;
     void insert(const std::string& key, const std::string& name, 
     const std::string& dob, const std::string& tel, const std::string& email);
     void deleteNode(const std::string& key);
     AVLNode* find(const std::string& key);
 	void updateValue(const std::string& key, const std::string& name, const std::string& dob, const std::string& tel, const std::string& email);
-    // Add other methods as necessary
+    int getOperationCount() const { return operationCount; }
+    void startTimer() {
+        startTime = std::chrono::steady_clock::now();
+    }
+    void stopTimer() {
+        endTime = std::chrono::steady_clock::now();
+    }
+    double getElapsedTime() const {
+        std::chrono::duration<double, std::milli> elapsedTime = endTime - startTime;
+        return elapsedTime.count();
+    }
 };
 
 // Implementation of AVLTree member functions
@@ -92,6 +106,7 @@ void AVLTree::printTree() const {
 // Insert function
 AVLNode* AVLTree::insert(AVLNode* node, const std::string& key, const std::string& name, 
                          const std::string& dob, const std::string& tel, const std::string& email) {
+    operationCount++;
     // Perform standard BST insertion
     if (node == NULL) {
         return new AVLNode(key, name, dob, tel, email);
@@ -139,15 +154,15 @@ AVLNode* AVLTree::insert(AVLNode* node, const std::string& key, const std::strin
 void AVLTree::insert(const std::string& key, const std::string& name, 
     const std::string& dob, const std::string& tel, const std::string& email) {
     root = insert(root, key, name, dob, tel, email);
-    printTree(); // Print the tree structure after insertion
+    // printTree(); // Print the tree structure after insertion
 }
 
 AVLNode* AVLTree::find(AVLNode* node, const std::string& key) {
+    operationCount++;
     if (node == NULL) {
         std::cout << "Node with key '" << key << "' not found." << std::endl;
         return NULL;
     }
-
     if (node->key == key) {
         std::cout << "Node found: \n"
                   << "\tKey: " << node->key << "\n"
@@ -172,10 +187,10 @@ AVLNode* AVLTree::find(const std::string& key) {
 
 // Delete Node function
 AVLNode* AVLTree::deleteNode(AVLNode* node, const std::string& key) {
+    operationCount++;
     if (node == NULL) {
         return node;
     }
-
     if (key < node->key) {
         node->left = deleteNode(node->left, key);
     } else if (key > node->key) {
@@ -240,11 +255,12 @@ AVLNode* AVLTree::deleteNode(AVLNode* node, const std::string& key) {
 
 void AVLTree::deleteNode(const std::string& key) {
     root = deleteNode(root, key);
-    printTree(); // Print the tree structure after deletion
+    // printTree(); // Print the tree structure after deletion
 }
 
 // Rotate Right function
 AVLNode* AVLTree::rotateRight(AVLNode* y) {
+    operationCount++;
     AVLNode* x = y->left;
     AVLNode* T2 = x->right;
 
@@ -259,6 +275,7 @@ AVLNode* AVLTree::rotateRight(AVLNode* y) {
 
 // Rotate Left function
 AVLNode* AVLTree::rotateLeft(AVLNode* x) {
+    operationCount++;
     AVLNode* y = x->right;
     AVLNode* T2 = y->left;
 
@@ -273,6 +290,7 @@ AVLNode* AVLTree::rotateLeft(AVLNode* x) {
 
 // Get Height function
 int AVLTree::getHeight(AVLNode* N) {
+    operationCount++;
     if (N == NULL) {
         return 0;
     }
@@ -280,13 +298,14 @@ int AVLTree::getHeight(AVLNode* N) {
 }
 
 void AVLTree::updateValue(const std::string& key, const std::string& name, const std::string& dob, const std::string& tel, const std::string& email) {
+    operationCount++;
     AVLNode* node = find(root, key);
     if (node != NULL) {
         node->name = name;
         node->dateOfBirth = dob;
         node->telephone = tel;
         node->email = email;
-        printTree();
+        // printTree();
     } else {
         std::cout << "Key not found in AVL tree." << std::endl;
     }
@@ -295,6 +314,7 @@ void AVLTree::updateValue(const std::string& key, const std::string& name, const
 
 // Get Balance function
 int AVLTree::getBalance(AVLNode* N) {
+    operationCount++;
     if (N == NULL) {
         return 0;
     }
@@ -303,6 +323,7 @@ int AVLTree::getBalance(AVLNode* N) {
 
 // Min Value Node function
 AVLNode* AVLTree::minValueNode(AVLNode* node) {
+    operationCount++;
     AVLNode* current = node;
     while (current && current->left != NULL) {
         current = current->left;
