@@ -160,16 +160,16 @@ void AVLTree::insert(const std::string& key, const std::string& name,
 AVLNode* AVLTree::find(AVLNode* node, const std::string& key) {
     operationCount++;
     if (node == NULL) {
-        std::cout << "Node with key '" << key << "' not found." << std::endl;
+        // std::cout << "Node with key '" << key << "' not found." << std::endl;
         return NULL;
     }
     if (node->key == key) {
-        std::cout << "Node found: \n"
-                  << "\tKey: " << node->key << "\n"
-                  << "\tName: " << node->name << "\n"
-                  << "\tDate of Birth: " << node->dateOfBirth << "\n"
-                  << "\tTelephone: " << node->telephone << "\n"
-                  << "\tEmail: " << node->email << "\n";
+        // std::cout << "Node found: \n"
+        //           << "\tKey: " << node->key << "\n"
+        //           << "\tName: " << node->name << "\n"
+        //           << "\tDate of Birth: " << node->dateOfBirth << "\n"
+        //           << "\tTelephone: " << node->telephone << "\n"
+        //           << "\tEmail: " << node->email << "\n";
         return node;
     }
 
@@ -181,7 +181,7 @@ AVLNode* AVLTree::find(AVLNode* node, const std::string& key) {
 }
 
 AVLNode* AVLTree::find(const std::string& key) {
-    std::cout << "Searching for node with key '" << key << "'..." << std::endl;
+    // std::cout << "Searching for node with key '" << key << "'..." << std::endl;
     return find(root, key);
 }
 
