@@ -15,7 +15,7 @@ struct StudentData {
 
 void shuffle(std::vector<StudentData>& students) {
     std::srand(static_cast<unsigned int>(std::time(0))); // Seed for random number generator
-    for (size_t i = students.size() - 1; i > 0; --i) {
+    for (size_t i = 1000 - 1; i > 0; --i) {
         size_t j = std::rand() % (i + 1); // Random index from 0 to i
         std::swap(students[i], students[j]); // Swap elements
     }
@@ -52,15 +52,33 @@ int main() {
 
         AVLTree avlTree;
         avlTree.startTimer();
-        for (size_t j = 0; j < students.size(); ++j) {
+        for (size_t j = 0; j < 1000; ++j) {
             avlTree.insert(students[j].id, students[j].name, "DateOfBirth", students[j].phoneNumber, "Email");
         }
         avlTree.stopTimer();
         int operationCount = avlTree.getOperationCount();
 
         std::cout << "Iteration " << (i + 1) << " completed.\n";
-        std::cout << "Operation Count: " << operationCount << "\n\n";
-        std::cout << "Total time taken for insertions: " << avlTree.getElapsedTime() << "ms" << std::endl;
+        std::cout << "Operation Count: " << operationCount << "\n";
+        std::cout << "Total time taken for inserts: " << avlTree.getElapsedTime() << "ms" << std::endl;
+        std::cout << "\n";
+
+        operationCount = 0;
+
+        avlTree.startTimer();
+        // Search for random keys in the tree
+        for (size_t j = 0; j < 1000; ++j) {
+            std::string randomKey = students[rand() % 1000].id; // Generate a random key from the students vector
+            avlTree.find(randomKey);
+        }
+        avlTree.stopTimer();
+        operationCount = avlTree.getOperationCount();
+
+        std::cout << "Iteration " << (i + 1) << " completed.\n";
+        std::cout << "Operation Count: " << operationCount << "\n";
+        std::cout << "Total time taken for searches: " << avlTree.getElapsedTime() << "ms" << std::endl;
+
+        std::cout << "-------------------------------------------------------------\n";
     }
 
     return 0;
